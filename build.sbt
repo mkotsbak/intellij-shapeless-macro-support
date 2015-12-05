@@ -1,10 +1,10 @@
 onLoad in Global := ((s: State) => { "updateIdea" :: s}) compose (onLoad in Global).value
 
 lazy val sbtIdeaExample: Project =
-  Project("sbt-idea-example", file("."))
+  Project("shapeless-apply-product-support", file("."))
     .enablePlugins(SbtIdeaPlugin)
     .settings(
-      name := "sbt-idea-example",
+      name := "shapeless-apply-product-support",
       version := "1.0",
       scalaVersion := "2.11.7",
       assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),

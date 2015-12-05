@@ -19,7 +19,7 @@
     </project-components>
 
     <extensions defaultExtensionNs="org.intellij.scala">
-        <syntheticMemberInjector implementation="org.jetbrains.example.injector.Injector"/>
+        <syntheticMemberInjector implementation="com.jacoby6000.shapeless.injector.ShapelessApplyProductInjector"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
