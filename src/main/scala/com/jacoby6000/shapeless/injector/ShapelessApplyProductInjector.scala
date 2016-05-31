@@ -10,10 +10,16 @@ import org.jetbrains.plugins.scala.lang.psi.impl.toplevel.typedef.SyntheticMembe
   */
 class ShapelessApplyProductInjector extends SyntheticMembersInjector {
   override def injectFunctions(source: ScTypeDefinition): Seq[String] = {
-    val result: Option[Seq[String]] = source.parents.find(_.getText == "shapeless.ProductArgs") match {
+    source.parents.find(_.getText == "shapeless.ProductArgs") match {
       case Some(_) =>
-        source.members.find(_.getName == "applyProduct") map {
-          case method: ScFunctionDefinition if method.body.isDefined =>
+        val productMethod = "(.*)Product".r
+        source.members.flatMap( method =>
+          method.getName match {
+            case productMethod(productName) => Seq( (method, productName) )
+            case _ => Seq.empty
+          }
+        ).flatMap {
+          case (method: ScFunctionDefinition, productName) if method.body.isDefined =>
             val expr = method.body.get
             val methods = (0 to 100) map { n =>
               val typeParams = (0 to n).map("T" + _)
@@ -23,21 +29,19 @@ class ShapelessApplyProductInjector extends SyntheticMembersInjector {
               val regParamsString = typeParams.zip(typeParams).map { case (name, tpe) => s"$name: $tpe" }.mkString("(",",",")")
 
               val returnType = expr.getType().getOrNothing.canonicalText
-              val signature = s"def apply$typeParamsString$regParamsString: $returnType"
+              val signature = s"def $productName$typeParamsString$regParamsString: $returnType"
 
-              val body = s"applyProduct(${regParams.mkString(" :: ")} :: HNil)"
+              val body = s"${productName}Product(${regParams.mkString(" :: ")} :: HNil)"
 
               s"$signature = $body"
             }
 
             methods foreach println
             methods.toSeq
-          case _ => Seq()
+          case _ => Seq.empty
         }
 
-      case None => None
+      case None => Seq.empty
     }
-
-    result.toSeq.flatten
   }
 }
