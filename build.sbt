@@ -6,13 +6,13 @@ lazy val sbtIdeaExample: Project =
     .settings(
       name := "shapeless-apply-product-support",
       version := "1.0",
-      scalaVersion := "2.11.7",
+      scalaVersion := "2.11.8",
       assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false),
       ideaInternalPlugins := Seq(),
-      ideaExternalPlugins := Seq(IdeaPlugin.Zip("scala-plugin", url("https://plugins.jetbrains.com/files/1347/21610/scala-intellij-bin-1.9.2.zip"))),
+      ideaExternalPlugins := Seq(IdeaPlugin.Zip("scala-plugin", url("https://plugins.jetbrains.com/plugin/download?pr=&updateId=25886"))),
       aggregate in updateIdea := false,
       assemblyExcludedJars in assembly <<= ideaFullJars,
-      ideaBuild := "143.116.4" //IDEA 15 public preview
+      ideaBuild := "145.972.3" // IDEA 2016.1.2 (latest stable)
     )
 
 lazy val ideaRunner: Project = project.in(file("ideaRunner"))
@@ -20,7 +20,7 @@ lazy val ideaRunner: Project = project.in(file("ideaRunner"))
   .settings(
     name := "ideaRunner",
     version := "1.0",
-    scalaVersion := "2.11.7",
+    scalaVersion := "2.11.8",
     autoScalaLibrary := false,
     unmanagedJars in Compile <<= ideaMainJars.in(sbtIdeaExample),
     unmanagedJars in Compile += file(System.getProperty("java.home")).getParentFile / "lib" / "tools.jar"
@@ -31,7 +31,7 @@ lazy val packagePlugin = TaskKey[File]("package-plugin", "Create plugin's zip fi
 packagePlugin in sbtIdeaExample <<= (assembly in sbtIdeaExample,
   target in sbtIdeaExample,
   ivyPaths) map { (ideaJar, target, paths) =>
-  val pluginName = "sbt-idea-example"
+  val pluginName = "shapeless-apply-product-support"
   val ivyLocal = paths.ivyHome.getOrElse(file(System.getProperty("user.home")) / ".ivy2") / "local"
   val sources = Seq(
     ideaJar -> s"$pluginName/lib/${ideaJar.getName}"

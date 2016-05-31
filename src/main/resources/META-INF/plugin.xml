@@ -1,6 +1,6 @@
 <idea-plugin version="2">
-    <id>org.jetbrains.sbt-idea-example</id>
-    <name>SBT IDEA example</name>
+    <id>com.jacoby6000.shapeless.injector</id>
+    <name>Shapeless apply product support</name>
     <version>1.0</version>
     <vendor url="http://www.jetbrains.com">JetBrains</vendor>
 
